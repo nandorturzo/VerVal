@@ -1,6 +1,10 @@
+using System;
+using NUnit.Framework;
+
 namespace DatesAndStuff.Tests
 {
-    public sealed class SimulationTimeTests
+    [TestFixture]
+    public class SimulationTimeTests
     {
         [OneTimeSetUp]
         public void OneTimeSetupStuff()
@@ -29,19 +33,30 @@ namespace DatesAndStuff.Tests
         // Should: The expected behavior or condition
         // Then: The expected outcome or result
 
-        [Test]
-        public void Constructor_WithoutParameters_SetsDefaultTime()
+        [TestFixture] //Marks that the class is used for testing
+        public class BasicFunctionalityTests : SimulationTimeTests
         {
-            throw new NotImplementedException();
+            [Test]
+            public void Constructor_WithoutParameters_SetsDefaultTime()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Test]
+            public void ComparisonOperators_WithDifferentTimes_ReturnExpectedResults()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Test]
+            public void ToString_OnSimulationTime_ReturnsFormattedString()
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        [Test]
-        public void ComparisonOperators_WithDifferentTimes_ReturnExpectedResults()
-        {
-            throw new NotImplementedException();
-        }
-
-        private class TimeSpanArithmeticTests
+        [TestFixture]
+        public class TimeManipulationTests : SimulationTimeTests
         {
             [Test]
             public void AddTimeSpan_ToSimulationTime_ReturnsShiftedTime()
@@ -52,10 +67,8 @@ namespace DatesAndStuff.Tests
                 DateTime baseDate = new DateTime(2010, 8, 23, 9, 4, 49);
                 SimulationTime sut = new SimulationTime(baseDate);
                 var ts = TimeSpan.FromMilliseconds(4544313);
-
                 // Act
                 var result = sut + ts;
-
                 // Assert
                 var expectedDateTime = baseDate + ts;
                 Assert.AreEqual(expectedDateTime, result.ToAbsoluteDateTime());
@@ -68,50 +81,44 @@ namespace DatesAndStuff.Tests
                 // RegisterOrder_SignedInUserSendsOrder_OrderIsRegistered
                 throw new NotImplementedException();
             }
-        }
 
-        [Test]
-        public void SubtractSimulationTime_FromAnotherSimulationTime_ReturnsTimeSpan()
-        {
-            throw new NotImplementedException();
-        }
+            [Test]
+            public void SubtractSimulationTime_FromAnotherSimulationTime_ReturnsTimeSpan()
+            {
+                throw new NotImplementedException();
+            }
 
-        [Test]
-        public void MinValue_AddMilliseconds_CreatesValidTime()
-        {
-            //var t1 = SimulationTime.MinValue.AddMilliseconds(10);
-            throw new NotImplementedException();
-        }
+            [Test]
+            public void MinValue_AddMilliseconds_CreatesValidTime()
+            {
+                //var t1 = SimulationTime.MinValue.AddMilliseconds(10);
+                throw new NotImplementedException();
+            }
 
-        [Test]
-        public void NextMillisec_OnSimulationTime_IncreasesTimeByOneMillisecond()
-        {
-            //Assert.AreEqual(t1.TotalMilliseconds + 1, t1.NextMillisec.TotalMilliseconds);
-            throw new NotImplementedException();
-        }
+            [Test]
+            public void NextMillisec_OnSimulationTime_IncreasesTimeByOneMillisecond()
+            {
+                //Assert.AreEqual(t1.TotalMilliseconds + 1, t1.NextMillisec.TotalMilliseconds);
+                throw new NotImplementedException();
+            }
 
-        [Test]
-        public void AddMilliseconds_ToSimulationTime_IncreasesTimeBySpecifiedAmount()
-        {
-            throw new NotImplementedException();
-        }
+            [Test]
+            public void AddMilliseconds_ToSimulationTime_IncreasesTimeBySpecifiedAmount()
+            {
+                throw new NotImplementedException();
+            }
 
-        [Test]
-        public void AddSeconds_ToSimulationTime_IncreasesTimeBySpecifiedAmount()
-        {
-            throw new NotImplementedException();
-        }
+            [Test]
+            public void AddSeconds_ToSimulationTime_IncreasesTimeBySpecifiedAmount()
+            {
+                throw new NotImplementedException();
+            }
 
-        [Test]
-        public void AddTimeSpan_ToSimulationTime_IncreasesTimeBySpecifiedAmount()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Test]
-        public void ToString_OnSimulationTime_ReturnsFormattedString()
-        {
-            throw new NotImplementedException();
+            [Test]
+            public void AddTimeSpan_ToSimulationTime_IncreasesTimeBySpecifiedAmount()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
