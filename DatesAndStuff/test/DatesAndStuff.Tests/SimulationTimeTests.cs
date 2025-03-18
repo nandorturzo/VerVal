@@ -43,9 +43,38 @@ namespace DatesAndStuff.Tests
             }
 
             [Test]
+            // equal
+            // not equal
+            // <
+            // >
+            // <= different
+            // >= different 
+            // <= same
+            // >= same
+            // max
+            // min
             public void ComparisonOperators_WithDifferentTimes_ReturnExpectedResults()
             {
                 throw new NotImplementedException();
+            }
+
+            [Test]
+            public void EqualOperator_WithSameTimes_ReturnsExpectedResults()
+            {
+                DateTime date = new DateTime(2022, 5, 13, 12, 0, 0);
+                SimulationTime time1 = new SimulationTime(date);
+                SimulationTime time2 = new SimulationTime(date);
+                Assert.AreEqual(time1, time2, "Expected both SimulationTime instances to be equal.");
+            }
+
+            [Test]
+            public void NotEqualOperator_WithDifferentTimes_ReturnsExpectedResults()
+            {
+                DateTime date1 = new DateTime(2021, 4, 6, 18, 16, 0);
+                DateTime date2 = new DateTime(2021, 4, 6, 18, 16, 1);
+                SimulationTime time1 = new SimulationTime(date1);
+                SimulationTime time2 = new SimulationTime(date2);
+                Assert.AreNotEqual(time1, time2, "Expected different SimulationTime instances to not be equal.");
             }
 
             [Test]
