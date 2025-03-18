@@ -58,25 +58,44 @@ public class PersonTests
         [Test]
         public void PersonHasSalary_IncreasedByPositiveValue_SalaryIncreased()
         {
-            throw new NotImplementedException();
+            double initialSalary = sut.Salary;
+            double increasePercentage = 5.0;
+            double expectedSalary = initialSalary * (1 + increasePercentage / 100);
+
+            sut.IncreaseSalary(increasePercentage);
+
+            Assert.AreEqual(expectedSalary, sut.Salary);
         }
 
         [Test]
         public void PersonHasSalary_IncreasedByZeroPercent_SalaryRemainsSame()
         {
-            throw new NotImplementedException();
+            double initialSalary = sut.Salary;
+            double increasePercentage = 0.0;
+
+            sut.IncreaseSalary(increasePercentage);
+
+            Assert.AreEqual(initialSalary, sut.Salary);
         }
 
         [Test]
         public void PersonHasSalary_DecreasedByNegativeValue_SalaryDecreased()
         {
-            throw new NotImplementedException();
+            double initialSalary = sut.Salary;
+            double decreasePercentage = -5.0;
+            double expectedSalary = initialSalary * (1 + decreasePercentage / 100);
+
+            sut.IncreaseSalary(decreasePercentage);
+
+            Assert.AreEqual(expectedSalary, sut.Salary);
         }
 
         [Test]
         public void PersonHasSalary_DecreasedByMoreThanTenPercent_Fails()
         {
-            throw new NotImplementedException();
+            double decreasePercentage = -10.1;
+
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => sut.IncreaseSalary(decreasePercentage));
         }
     }
 }

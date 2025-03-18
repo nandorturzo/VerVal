@@ -106,22 +106,48 @@ namespace DatesAndStuff.Tests
             [Test]
             public void SubtractTimeSpan_FromSimulationTime_ReturnsShiftedTime()
             {
-                // code kozelibb
-                // RegisterOrder_SignedInUserSendsOrder_OrderIsRegistered
-                throw new NotImplementedException();
+                DateTime baseDate = new DateTime(2010, 8, 23, 9, 4, 49);
+                SimulationTime sut = new SimulationTime(baseDate);
+                var ts = TimeSpan.FromMilliseconds(4544313);
+
+                var result = sut - ts;
+
+                var expectedDateTime = baseDate - ts;
+                Assert.That(result.ToAbsoluteDateTime(), Is.EqualTo(expectedDateTime));
             }
 
             [Test]
             public void SubtractSimulationTime_FromAnotherSimulationTime_ReturnsTimeSpan()
             {
-                throw new NotImplementedException();
+                DateTime baseDate1 = new DateTime(2010, 8, 23, 9, 4, 49);
+                DateTime baseDate2 = new DateTime(2010, 8, 20, 5, 30, 0);
+                SimulationTime time1 = new SimulationTime(baseDate1);
+                SimulationTime time2 = new SimulationTime(baseDate2);
+
+                TimeSpan result = time1 - time2;
+
+                TimeSpan expected = baseDate1 - baseDate2;
+
+                //checks with 1 second tolerance
+                Assert.That(result.TotalMilliseconds, Is.EqualTo(expected.TotalMilliseconds).Within(1));
             }
 
             [Test]
             public void MinValue_AddMilliseconds_CreatesValidTime()
             {
-                //var t1 = SimulationTime.MinValue.AddMilliseconds(10);
-                throw new NotImplementedException();
+                SimulationTime minValue = SimulationTime.MinValue;
+                double millisToAdd = 10;
+
+                SimulationTime result = minValue.AddMilliseconds(millisToAdd);
+
+
+                Assert.That(result.TotalMilliseconds, Is.EqualTo(minValue.TotalMilliseconds + millisToAdd));
+
+                // Checks if result is valid and greater than date minValue
+                Assert.That(result.ToAbsoluteDateTime(), Is.GreaterThan(DateTime.MinValue));
+
+                // Checks if result is greater than minValue
+                Assert.That(result, Is.GreaterThan(minValue));
             }
 
             [Test]
@@ -134,7 +160,13 @@ namespace DatesAndStuff.Tests
             [Test]
             public void AddMilliseconds_ToSimulationTime_IncreasesTimeBySpecifiedAmount()
             {
-                throw new NotImplementedException();
+                DateTime baseDate = new DateTime(2010, 8, 23, 9, 4, 49);
+                SimulationTime sut = new SimulationTime(baseDate);
+                double millisToAdd = 5000;
+
+                SimulationTime result = sut.AddMilliseconds(millisToAdd);
+
+                Assert.That(result.ToAbsoluteDateTime(), Is.EqualTo(baseDate.AddMilliseconds(millisToAdd)));
             }
 
             [Test]
