@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using FluentAssertions;
 
 namespace DatesAndStuff.Tests
 {
@@ -33,7 +34,7 @@ namespace DatesAndStuff.Tests
         // Should: The expected behavior or condition
         // Then: The expected outcome or result
 
-        [TestFixture] //Marks that the class is used for testing
+        [TestFixture]
         public class BasicFunctionalityTests : SimulationTimeTests
         {
             [Test]
@@ -45,12 +46,12 @@ namespace DatesAndStuff.Tests
             [Test]
             // equal
             // not equal
-            // <
-            // >
-            // <= different
+            // < 
+            // > 
+            // <= different 
             // >= different 
-            // <= same
-            // >= same
+            // <= same 
+            // >= same 
             // max
             // min
             public void ComparisonOperators_WithDifferentTimes_ReturnExpectedResults()
@@ -64,7 +65,7 @@ namespace DatesAndStuff.Tests
                 DateTime date = new DateTime(2022, 5, 13, 12, 0, 0);
                 SimulationTime time1 = new SimulationTime(date);
                 SimulationTime time2 = new SimulationTime(date);
-                Assert.AreEqual(time1, time2, "Expected both SimulationTime instances to be equal.");
+                time1.Should().Be(time2, "Expected both SimulationTime instances to be equal.");
             }
 
             [Test]
@@ -74,7 +75,7 @@ namespace DatesAndStuff.Tests
                 DateTime date2 = new DateTime(2021, 4, 6, 18, 16, 1);
                 SimulationTime time1 = new SimulationTime(date1);
                 SimulationTime time2 = new SimulationTime(date2);
-                Assert.AreNotEqual(time1, time2, "Expected different SimulationTime instances to not be equal.");
+                time1.Should().NotBe(time2, "Expected different SimulationTime instances to not be equal.");
             }
 
             [Test]
@@ -100,7 +101,7 @@ namespace DatesAndStuff.Tests
                 var result = sut + ts;
                 // Assert
                 var expectedDateTime = baseDate + ts;
-                Assert.AreEqual(expectedDateTime, result.ToAbsoluteDateTime());
+                result.ToAbsoluteDateTime().Should().Be(expectedDateTime);
             }
 
             [Test]
@@ -113,7 +114,7 @@ namespace DatesAndStuff.Tests
                 var result = sut - ts;
 
                 var expectedDateTime = baseDate - ts;
-                Assert.That(result.ToAbsoluteDateTime(), Is.EqualTo(expectedDateTime));
+                result.ToAbsoluteDateTime().Should().Be(expectedDateTime);
             }
 
             [Test]
@@ -129,7 +130,7 @@ namespace DatesAndStuff.Tests
                 TimeSpan expected = baseDate1 - baseDate2;
 
                 //checks with 1 second tolerance
-                Assert.That(result.TotalMilliseconds, Is.EqualTo(expected.TotalMilliseconds).Within(1));
+                result.TotalMilliseconds.Should().BeApproximately(expected.TotalMilliseconds, 1);
             }
 
             [Test]
@@ -140,14 +141,13 @@ namespace DatesAndStuff.Tests
 
                 SimulationTime result = minValue.AddMilliseconds(millisToAdd);
 
-
-                Assert.That(result.TotalMilliseconds, Is.EqualTo(minValue.TotalMilliseconds + millisToAdd));
+                result.TotalMilliseconds.Should().Be(minValue.TotalMilliseconds + (long)millisToAdd);
 
                 // Checks if result is valid and greater than date minValue
-                Assert.That(result.ToAbsoluteDateTime(), Is.GreaterThan(DateTime.MinValue));
+                result.ToAbsoluteDateTime().Should().BeAfter(DateTime.MinValue); // BeAfter is the replacement for GreaterThan
 
                 // Checks if result is greater than minValue
-                Assert.That(result, Is.GreaterThan(minValue));
+                result.Should().BeGreaterThan(minValue);
             }
 
             [Test]
@@ -166,7 +166,7 @@ namespace DatesAndStuff.Tests
 
                 SimulationTime result = sut.AddMilliseconds(millisToAdd);
 
-                Assert.That(result.ToAbsoluteDateTime(), Is.EqualTo(baseDate.AddMilliseconds(millisToAdd)));
+                result.ToAbsoluteDateTime().Should().Be(baseDate.AddMilliseconds(millisToAdd));
             }
 
             [Test]
