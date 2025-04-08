@@ -83,8 +83,19 @@ namespace DatesAndStuff
         {
             PreferredPayment.StartPayment();
             PreferredPayment.SpecifyAmount(SubscriptionFee);
-            PreferredPayment.ConfirmPayment();
-            return true;
+
+            double currentBalance = PreferredPayment.Balance;
+
+            if (currentBalance >= SubscriptionFee)
+            {
+                PreferredPayment.ConfirmPayment();
+                return true;
+            }
+            else
+            {
+                PreferredPayment.Cancel();
+                return false;
+            }
         }
     }
 }
