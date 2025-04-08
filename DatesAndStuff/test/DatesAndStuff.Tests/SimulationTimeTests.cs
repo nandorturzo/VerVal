@@ -46,12 +46,12 @@ namespace DatesAndStuff.Tests
             [Test]
             // equal
             // not equal
-            // < 
-            // > 
-            // <= different 
+            // <
+            // >
+            // <= different
             // >= different 
-            // <= same 
-            // >= same 
+            // <= same
+            // >= same
             // max
             // min
             public void ComparisonOperators_WithDifferentTimes_ReturnExpectedResults()
@@ -93,12 +93,16 @@ namespace DatesAndStuff.Tests
             {
                 // UserSignedIn_OrderSent_OrderIsRegistered
                 // DBB, specflow, cucumber, gherkin
+
                 // Arrange
                 DateTime baseDate = new DateTime(2010, 8, 23, 9, 4, 49);
                 SimulationTime sut = new SimulationTime(baseDate);
+
                 var ts = TimeSpan.FromMilliseconds(4544313);
+
                 // Act
                 var result = sut + ts;
+
                 // Assert
                 var expectedDateTime = baseDate + ts;
                 result.ToAbsoluteDateTime().Should().Be(expectedDateTime);
@@ -116,6 +120,7 @@ namespace DatesAndStuff.Tests
                 var expectedDateTime = baseDate - ts;
                 result.ToAbsoluteDateTime().Should().Be(expectedDateTime);
             }
+
 
             [Test]
             public void SubtractSimulationTime_FromAnotherSimulationTime_ReturnsTimeSpan()
@@ -177,6 +182,13 @@ namespace DatesAndStuff.Tests
 
             [Test]
             public void AddTimeSpan_ToSimulationTime_IncreasesTimeBySpecifiedAmount()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Test]
+            // check string representation given by ToString
+            public void SimulationTime_ToString()
             {
                 throw new NotImplementedException();
             }

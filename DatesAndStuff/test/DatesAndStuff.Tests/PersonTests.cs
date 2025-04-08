@@ -10,9 +10,32 @@ public class PersonTests
     [SetUp]
     public void Setup()
     {
-        this.sut = new Person("Test Pista", 54);
+
     }
 
+    [Test]
+    public void Constructor_DefaultParams_ShouldBeAbleToEatChocolate()
+    {
+        // Arrange
+
+        // Act
+        Person sut = PersonFactory.CreateTestPerson();
+
+        // Assert
+        sut.CanEatChocolate.Should().BeTrue();
+    }
+
+    [Test]
+    public void Constructor_DontLikeChocolate_ShouldNotBeAbleToEatChocolate()
+    {
+        // Arrange
+
+        // Act
+        Person sut = PersonFactory.CreateTestPerson(fp => fp.CanEatChocolate = false);
+
+        // Assert
+        sut.CanEatChocolate.Should().BeFalse();
+    }
     //Used the Given_When_then terminology for all the test
 
     [TestFixture] //Marks that the class is used for testing
