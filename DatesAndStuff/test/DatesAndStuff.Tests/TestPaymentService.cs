@@ -1,21 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatesAndStuff.Tests
 {
     internal class TestPaymentService : IPaymentService
     {
-        uint startCallCount = 0;
-        uint specifyCallCount = 0;
-        uint confirmCallCount = 0;
+        private uint startCallCount = 0;
+        private uint specifyCallCount = 0;
+        private uint confirmCallCount = 0;
+        private double balance;
+
+        public TestPaymentService(double initialBalance)
+        {
+            balance = initialBalance;
+        }
+
+        public double Balance => balance;
 
         public void StartPayment()
         {
             if (startCallCount != 0 || specifyCallCount > 0 || confirmCallCount > 0)
-                throw new Exception();
+                throw new Exception("StartPayment should only be called once, before any other action.");
 
             startCallCount++;
         }
@@ -23,7 +27,12 @@ namespace DatesAndStuff.Tests
         public void SpecifyAmount(double amount)
         {
             if (startCallCount != 1 || specifyCallCount > 0 || confirmCallCount > 0)
-                throw new Exception();
+                throw new Exception("SpecifyAmount should only be called after StartPayment and before ConfirmPayment.");
+
+            if (amount > balance)
+            {
+                throw new Exception("Insufficient balance for payment.");
+            }
 
             specifyCallCount++;
         }
@@ -31,7 +40,7 @@ namespace DatesAndStuff.Tests
         public void ConfirmPayment()
         {
             if (startCallCount != 1 || specifyCallCount != 1 || confirmCallCount > 0)
-                throw new Exception();
+                throw new Exception("ConfirmPayment should only be called once after SpecifyAmount.");
 
             confirmCallCount++;
         }
@@ -39,6 +48,13 @@ namespace DatesAndStuff.Tests
         public bool SuccessFul()
         {
             return startCallCount == 1 && specifyCallCount == 1 && confirmCallCount == 1;
+        }
+
+        public void Cancel()
+        {
+            startCallCount = 0;
+            specifyCallCount = 0;
+            confirmCallCount = 0;
         }
     }
 }
