@@ -100,9 +100,9 @@ namespace DatesAndStuff.Tests
                 new FoodPreferenceParams() { CanEatChocolate = true, CanEatEgg = true, CanEatLactose = true, CanEatGluten = true }
             );
 
-            // Act
-            bool result = sut.PerformSubsriptionPayment();
-
+            // Act                                                             
+            bool result = sut.PerformSubsriptionPayment();                     
+                                                                               
             // Assert
             result.Should().BeTrue();  // Ensure the result is true because balance is sufficient
             paymentService.Verify(m => m.StartPayment(), Times.Once);
