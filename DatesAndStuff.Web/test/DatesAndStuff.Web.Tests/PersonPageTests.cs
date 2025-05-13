@@ -96,56 +96,52 @@ namespace DatesAndStuff.Web.Tests
             }
             Assert.AreEqual("", verificationErrors.ToString());
         }
+
         [TestCase(1, 5050)]
         [TestCase(5, 5250)]
         [TestCase(10, 5500)]
         [TestCase(20, 6000)]
-        [TestCase(0, 5000)]
-        [TestCase(-10,4500)]
         public void Person_SalaryIncrease_ShouldIncrease(double percentage, double expectedSalary)
         {
             // Navigate to the base URL
             driver.Navigate().GoToUrl(BaseURL);
-
-            // Wait so page loads
             Thread.Sleep(1000);
 
             // Navigate to the Person page
             driver.FindElement(By.XPath("//*[@data-test='PersonPageNavigation']")).Click();
+            Thread.Sleep(1000);
 
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
-            // Wait for person page loads
-            Thread.Sleep(1000);
-
-            // Check that the initial salary is as expected
+            // Check initial salary
             var salaryLabelBefore = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='DisplayedSalary']")));
             var initialSalary = double.Parse(salaryLabelBefore.Text);
             initialSalary.Should().BeApproximately(5000, 0.001);
 
-            // Fill in the percentage input field
+            // Fill in valid percentage
             var input = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='SalaryIncreasePercentageInput']")));
             input.Clear();
             input.SendKeys(percentage.ToString());
 
-            // Short wait after input to ensure the value is set
             Thread.Sleep(500);
 
-            // Submit the form
+            // Submit form
             var submitButton = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='SalaryIncreaseSubmitButton']")));
             submitButton.Click();
 
-            // Wait for the updated salary
             Thread.Sleep(1000);
 
-            // Check that the updated salary is correct
+            // Validate updated salary
             var salaryLabelAfter = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='DisplayedSalary']")));
             var salaryAfterSubmission = double.Parse(salaryLabelAfter.Text);
             salaryAfterSubmission.Should().BeApproximately(expectedSalary, 0.001);
         }
 
-        [Test]
-        public void Person_InvalidPercentageBelowMinus10_ShouldShowValidationErrors()
+
+        [TestCase(0, "Percentage must not be zero.")]
+        [TestCase(-10, "Percentage must be greater than -10.")]
+        [TestCase(-15, "Percentage must be greater than -10.")]
+        public void Person_InvalidPercentage_ShouldShowValidationErrors(double percentage, string expectedError)
         {
             // Navigate to the base URL
             driver.Navigate().GoToUrl(BaseURL);
@@ -157,28 +153,26 @@ namespace DatesAndStuff.Web.Tests
 
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
-            // Input -15%
+            // Enter invalid input
             var input = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@data-test='SalaryIncreasePercentageInput']")));
             input.Clear();
-            input.SendKeys("-15");
+            input.SendKeys(percentage.ToString());
 
-            // Submit the form
+            // Submit form
             var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@data-test='SalaryIncreaseSubmitButton']")));
             submitButton.Click();
-            Thread.Sleep(1000); // Allow time for validation to occur
+            Thread.Sleep(1000);
 
-            // // Wait for the validation summary list (<ul>) to appear anywhere inside the form, created by ValidationSummary, 
+            // Wait for the validation summary list (<ul>) to appear anywhere inside the form, created by ValidationSummary
             var summaryError = wait.Until(ExpectedConditions.ElementIsVisible(
                 By.XPath("//form//ul[contains(@class, 'validation-errors')]")));
-            summaryError.Text.Should().Contain("between -10 and infinity");
+            summaryError.Text.Should().Contain(expectedError);
 
             // Wait for the inline validation message (<div>) that appears below the input field, created by ValidationMessage
             var fieldError = wait.Until(ExpectedConditions.ElementIsVisible(
                 By.XPath("//div[contains(@class, 'validation-message')]")));
-            fieldError.Text.Should().Contain("between -10 and infinity");
+            fieldError.Text.Should().Contain(expectedError);
         }
-
-
 
 
         private bool IsElementPresent(By by)

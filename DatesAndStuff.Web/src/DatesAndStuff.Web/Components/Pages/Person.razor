@@ -72,15 +72,16 @@
         [CustomValidation(typeof(FormModel), nameof(ValidatePercentage))]
         public double SalaryIncreasePercentage { get; set; } = 0;
 
+        // Validation method which does the same thing as in the backend (Employee.SalaryIncrease), because double Range is not allowed)
         public static ValidationResult? ValidatePercentage(double value, ValidationContext context)
         {
             if (value <= -10)
             {
-                return new ValidationResult("Percentage must be greater than -10.");
+                return new ValidationResult("Percentage must be greater than -10.", new[] { nameof(SalaryIncreasePercentage) });
             }
             if (value == 0)
             {
-                return new ValidationResult("Percentage must not be zero.");
+                return new ValidationResult("Percentage must not be zero.", new[] { nameof(SalaryIncreasePercentage) });
             }
 
             return ValidationResult.Success;
