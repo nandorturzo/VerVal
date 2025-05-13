@@ -7,6 +7,7 @@ using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -79,31 +80,62 @@ namespace DatesAndStuff.Web.Tests
             string urlDate = nextMonday.ToString("yyyy-MM-dd");
             driver.Navigate().GoToUrl($"https://wizzair.com/en-gb/booking/select-flight/TGM/BUD/{urlDate}");
 
-            // Wait for the page to load and display the flight options
+            // Check if there are 2 available flights for the next week
             var columns = wait.Until(d => d.FindElements(By.XPath("//div[contains(@class,'columns-inner')]//div[contains(@class,'column')]")));
-            int validDays = 0;
+            var validFlightDays = new List<DateTime>();
 
-            // Check if there are at least 2 valid days with flights
             foreach (var column in columns)
             {
-                // gets the time attribute from the time element
                 var timeAttr = column.FindElement(By.XPath(".//time")).GetAttribute("datetime");
                 if (DateTime.TryParse(timeAttr, out var date))
                 {
-
-                    // Check if the date is within the next week and if it has a flight
                     bool hasFlight = !column.GetAttribute("class").Contains("is-no-flight");
                     if (date >= nextMonday && date < nextMonday.AddDays(7) && hasFlight)
                     {
-                        validDays++;
+                        validFlightDays.Add(date);
                     }
                 }
             }
 
-            validDays.Should().BeGreaterThan(1, "because there should be more than 2 flights between TG - BUD");
+            // Check if there are atleast 2 flights
+            validFlightDays.Count.Should().BeGreaterThan(1, "because there should be more than 2 flights between TGM and BUD in the next week");
+
+            // Price check and screenshot
+            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            int priceThreshold = 250;
+
+            foreach (var flightDate in validFlightDays)
+            {
+                // Navigate to the flight selection page for each valid date
+                string dateStr = flightDate.ToString("yyyy-MM-dd");
+                driver.Navigate().GoToUrl($"https://wizzair.com/en-gb/booking/select-flight/TGM/BUD/{dateStr}");
+                RandomDelay();
+
+                try
+                {
+                    wait.Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class,'flight-select__flight__container')]")));
+
+                    var priceElement = driver.FindElement(By.XPath("//div[contains(@class, 'current-price')]"));
+                    string rawText = priceElement.Text;
+                    string digitsOnly = new string(rawText.Where(char.IsDigit).ToArray());
+
+                    // Check if the price is below the threshold and save the screentshot if it is
+                    if (int.TryParse(digitsOnly, out int price) && price < priceThreshold)
+                    {
+                        var screenshot = ((ITakesScreenshot)driver).GetScreenshot();
+                        string fileName = $"flight_{flightDate:yyyyMMdd}_price_{price}.png";
+                        string filePath = Path.Combine(desktopPath, fileName);
+
+                        screenshot.SaveAsFile(filePath);
+                        Console.WriteLine($"Screenshot saved: {filePath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Could not process {dateStr}: {ex.Message}");
+                }
+            }
         }
-
-
 
         private void TryClick(By by)
         {
