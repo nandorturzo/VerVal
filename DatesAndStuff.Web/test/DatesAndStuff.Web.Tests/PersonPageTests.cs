@@ -101,6 +101,7 @@ namespace DatesAndStuff.Web.Tests
         [TestCase(10, 5500)]
         [TestCase(20, 6000)]
         [TestCase(0, 5000)]
+        [TestCase(-10,4500)]
         public void Person_SalaryIncrease_ShouldIncrease(double percentage, double expectedSalary)
         {
             // Navigate to the base URL

@@ -69,7 +69,21 @@
     public class FormModel
     {
         [Required(ErrorMessage = "Percentage should be specified")]
-        [Range(-10d, Double.MaxValue, ErrorMessage = "The specified percentag should be between -10 and infinity.")]
+        [CustomValidation(typeof(FormModel), nameof(ValidatePercentage))]
         public double SalaryIncreasePercentage { get; set; } = 0;
+
+        public static ValidationResult? ValidatePercentage(double value, ValidationContext context)
+        {
+            if (value <= -10)
+            {
+                return new ValidationResult("Percentage must be greater than -10.");
+            }
+            if (value == 0)
+            {
+                return new ValidationResult("Percentage must not be zero.");
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }
