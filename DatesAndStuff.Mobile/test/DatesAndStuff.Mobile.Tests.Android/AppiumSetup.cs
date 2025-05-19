@@ -3,13 +3,14 @@
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Appium.Enums;
+using OpenQA.Selenium.Internal;
 
 namespace DatesAndStuff.Mobile.Tests
 {
     [SetUpFixture]
     public class AppiumSetup
     {
-        private static AppiumDriver? driver;
+        private static AppiumDriver driver;
 
         public static AppiumDriver App => driver ?? throw new NullReferenceException("AppiumDriver is null");
 
@@ -53,9 +54,9 @@ namespace DatesAndStuff.Mobile.Tests
             //androidOptions.AddAdditionalAppiumOption("avd", "pixel_5_-_api_33");
 
             // Note there are many more options that you can use to influence the app under test according to your needs
-
             driver = new AndroidDriver(androidOptions);
         }
+
 
         [OneTimeTearDown]
         public void RunAfterAnyTests()

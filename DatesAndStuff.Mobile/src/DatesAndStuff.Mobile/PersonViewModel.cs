@@ -23,7 +23,7 @@ public class PersonViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
     public class SalaryIncreaseData
     {
         [Required(ErrorMessage = "Percentage should be specified")]
-        [Range(-10d, Double.MaxValue, ErrorMessage = "The specified percentag should be between -10 and infinity.")]
+        [Range(-9.999d, double.MaxValue, ErrorMessage = "The specified percentag should be between -10 and infinity.")]
         public double? SalaryIncreasePercentage { get; set; }
     }
 
